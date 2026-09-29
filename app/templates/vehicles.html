@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}
+Vehicles | Fleet Management System
+{% endblock %}
+
+{% block page_title %}
+Vehicle Management
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h2>🚗 Vehicles</h2>
+        <p style="color:#64748b; margin-top:5px;">
+            Manage all vehicles in your fleet
+        </p>
+    </div>
+
+    <a href="{{ url_for('main.add_vehicle') }}"
+       class="btn btn-primary">
+        + Add Vehicle
+    </a>
+
+</div>
+
+
+<!-- VEHICLE SUMMARY -->
+
+<div class="cards">
+
+    <div class="card stat-card">
+
+        <div class="stat-icon">
+            🚗
+        </div>
+
+        <div>
+            <h2>{{ vehicles|length }}</h2>
+            <p>Total Vehicles</p>
+        </div>
+
+    </div>
+
+
+    <div class="card stat-card">
+
+        <div class="stat-icon">
+            ✅
+        </div>
+
+        <div>
+            <h2>
+                {{ vehicles|selectattr('status', 'equalto', 'Available')|list|length }}
+            </h2>
+
+            <p>Available</p>
+        </div>
+
+    </div>
+
+
+    <div class="card stat-card">
+
+        <div class="stat-icon">
+            🔧
+        </div>
+
+        <div>
+            <h2>
+                {{ vehicles|selectattr('status', 'equalto', 'Maintenance')|list|length }}
+            </h2>
+
+            <p>In Maintenance</p>
+        </div>
+
+    </div>
+
+
+    <div class="card stat-card">
+
+        <div class="stat-icon">
+            🛣️
+        </div>
+
+        <div>
+            <h2>
+                {{ vehicles|selectattr('status', 'equalto', 'On Route')|list|length }}
+            </h2>
+
+            <p>On Route</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- VEHICLE TABLE -->
+
+<div class="table-card">
+
+    {% if vehicles %}
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>#</th>
+
+                <th>Vehicle Number</th>
+
+                <th>Model</th>
+
+                <th>Type</th>
+
+                <th>Status</th>
+
+                <th>Current Location</th>
+
+                <th>Mileage</th>
+
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for vehicle in vehicles %}
+
+            <tr>
+
+                <td>
+                    {{ loop.index }}
+                </td>
+
+
+                <td>
+
+                    <strong>
+                        {{ vehicle.vehicle_number }}
+                    </strong>
+
+                </td>
+
+
+                <td>
+                    {{ vehicle.model }}
+                </td>
+
+
+                <td>
+                    {{ vehicle.vehicle_type }}
+                </td>
+
+
+                <td>
+
+                    <span class="status
+                        {{ vehicle.status|lower|replace(' ', '-') }}">
+
+                        {{ vehicle.status }}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    📍 {{ vehicle.current_location }}
+
+                </td>
+
+
+                <td>
+
+                    {{ "%.0f"|format(vehicle.mileage) }} km
+
+                </td>
+
+
+                <td>
+
+                    <form
+                        action="{{ url_for('main.delete_vehicle', vehicle_id=vehicle.id) }}"
+                        method="POST"
+                        onsubmit="return confirm('Are you sure you want to delete this vehicle?');"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger"
+                        >
+
+                            Delete
+
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+    <div class="empty">
+
+        <div style="font-size:60px;">
+            🚗
+        </div>
+
+        <h3 style="margin:15px 0;">
+            No Vehicles Found
+        </h3>
+
+        <p style="margin-bottom:20px;">
+            Start by adding your first vehicle.
+        </p>
+
+        <a
+            href="{{ url_for('main.add_vehicle') }}"
+            class="btn btn-primary"
+        >
+            + Add Vehicle
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

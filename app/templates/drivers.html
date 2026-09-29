@@ -1,0 +1,225 @@
+{% extends "base.html" %}
+
+{% block title %}
+Drivers | Fleet Management System
+{% endblock %}
+
+{% block page_title %}
+Driver Management
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h2>👨‍✈️ Drivers</h2>
+
+        <p style="color:#64748b; margin-top:5px;">
+            Manage drivers and their assigned vehicles
+        </p>
+    </div>
+
+    <a href="{{ url_for('main.add_driver') }}"
+       class="btn btn-primary">
+        + Add Driver
+    </a>
+
+</div>
+
+
+<!-- DRIVER SUMMARY -->
+
+<div class="cards">
+
+    <div class="card stat-card">
+
+        <div class="stat-icon">
+            👨‍✈️
+        </div>
+
+        <div>
+            <h2>{{ drivers|length }}</h2>
+            <p>Total Drivers</p>
+        </div>
+
+    </div>
+
+
+    <div class="card stat-card">
+
+        <div class="stat-icon">
+            ✅
+        </div>
+
+        <div>
+            <h2>
+                {{ drivers|selectattr('status', 'equalto', 'Available')|list|length }}
+            </h2>
+
+            <p>Available Drivers</p>
+        </div>
+
+    </div>
+
+
+    <div class="card stat-card">
+
+        <div class="stat-icon">
+            🚗
+        </div>
+
+        <div>
+            <h2>
+                {{ drivers|selectattr('assigned_vehicle', 'ne', 'Not Assigned')|list|length }}
+            </h2>
+
+            <p>Assigned Drivers</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- DRIVER TABLE -->
+
+<div class="table-card">
+
+    {% if drivers %}
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>#</th>
+                <th>Driver Name</th>
+                <th>Phone</th>
+                <th>License Number</th>
+                <th>Status</th>
+                <th>Assigned Vehicle</th>
+                <th>Action</th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody>
+
+            {% for driver in drivers %}
+
+            <tr>
+
+                <td>
+                    {{ loop.index }}
+                </td>
+
+
+                <td>
+
+                    <strong>
+                        {{ driver.name }}
+                    </strong>
+
+                </td>
+
+
+                <td>
+                    📞 {{ driver.phone }}
+                </td>
+
+
+                <td>
+                    {{ driver.license_number }}
+                </td>
+
+
+                <td>
+
+                    <span class="status
+                        {{ driver.status|lower|replace(' ', '-') }}">
+
+                        {{ driver.status }}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    {% if driver.assigned_vehicle != "Not Assigned" %}
+
+                        🚗 {{ driver.assigned_vehicle }}
+
+                    {% else %}
+
+                        <span style="color:#94a3b8;">
+                            Not Assigned
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+
+                <td>
+
+                    <form
+                        action="{{ url_for('main.delete_driver', driver_id=driver.id) }}"
+                        method="POST"
+                        onsubmit="return confirm('Are you sure you want to delete this driver?');"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger"
+                        >
+                            Delete
+                        </button>
+
+                    </form>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+    {% else %}
+
+    <div class="empty">
+
+        <div style="font-size:60px;">
+            👨‍✈️
+        </div>
+
+        <h3 style="margin:15px 0;">
+            No Drivers Found
+        </h3>
+
+        <p style="margin-bottom:20px;">
+            Start by adding your first driver.
+        </p>
+
+        <a
+            href="{{ url_for('main.add_driver') }}"
+            class="btn btn-primary"
+        >
+            + Add Driver
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

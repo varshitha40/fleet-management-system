@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>🗺️ Route Map</h1>
+        <p>View the selected vehicle route</p>
+    </div>
+
+    <a href="{{ url_for('main.routes') }}" class="btn">
+        ← Back to Routes
+    </a>
+</div>
+
+<div class="card" style="margin-bottom: 20px;">
+
+    <h2>
+        🚗 {{ route.vehicle_number }}
+    </h2>
+
+    <div style="
+        display: flex;
+        gap: 40px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+    ">
+
+        <div>
+            <strong>👨‍✈️ Driver</strong>
+            <p>{{ route.driver_name }}</p>
+        </div>
+
+        <div>
+            <strong>📍 Source</strong>
+            <p>{{ route.source }}</p>
+        </div>
+
+        <div>
+            <strong>🏁 Destination</strong>
+            <p>{{ route.destination }}</p>
+        </div>
+
+        <div>
+            <strong>📏 Distance</strong>
+            <p>{{ route.distance }} km</p>
+        </div>
+
+        <div>
+            <strong>⏱️ Estimated Time</strong>
+            <p>{{ route.estimated_time }}</p>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div id="map" style="
+        width: 100%;
+        height: 550px;
+        border-radius: 15px;
+    "></div>
+
+</div>
+
+
+<!-- Leaflet Map -->
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script>
+
+const source = {{ route.source | tojson }};
+const destination = {{ route.destination | tojson }};
+
+const map = L.map("map").setView(
+    [12.9716, 77.5946],
+    8
+);
+
+
+L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap contributors"
+    }
+).addTo(map);
+
+
+async function loadRoute() {
+
+    try {
+
+        // Find source location
+        const sourceResponse = await fetch(
+            "https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=in&q="
+            + encodeURIComponent(source + ", Karnataka, India")
+        );
+
+        const sourceData = await sourceResponse.json();
+
+
+        // Find destination location
+        const destinationResponse = await fetch(
+            "https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=in&q="
+            + encodeURIComponent(destination + ", Karnataka, India")
+        );
+
+        const destinationData =
+            await destinationResponse.json();
+
+
+        if (!sourceData.length || !destinationData.length) {
+
+            alert(
+                "Could not find the source or destination."
+            );
+
+            return;
+        }
+
+
+        const sourceLat =
+            parseFloat(sourceData[0].lat);
+
+        const sourceLon =
+            parseFloat(sourceData[0].lon);
+
+
+        const destinationLat =
+            parseFloat(destinationData[0].lat);
+
+        const destinationLon =
+            parseFloat(destinationData[0].lon);
+
+
+        // Get road route
+        const routeResponse = await fetch(
+            "https://router.project-osrm.org/route/v1/driving/"
+            + sourceLon + "," + sourceLat
+            + ";"
+            + destinationLon + "," + destinationLat
+            + "?overview=full&geometries=geojson"
+        );
+
+
+        const routeData =
+            await routeResponse.json();
+
+
+        if (
+            routeData.code !== "Ok"
+            || !routeData.routes.length
+        ) {
+
+            alert(
+                "Could not calculate the road route."
+            );
+
+            return;
+        }
+
+
+        const coordinates =
+            routeData.routes[0]
+                .geometry
+                .coordinates
+                .map(function(point) {
+
+                    return [
+                        point[1],
+                        point[0]
+                    ];
+
+                });
+
+
+        // Draw route
+        const routeLine = L.polyline(
+            coordinates,
+            {
+                weight: 6
+            }
+        ).addTo(map);
+
+
+        // Source marker
+        L.marker([
+            sourceLat,
+            sourceLon
+        ])
+        .addTo(map)
+        .bindPopup(
+            "<b>📍 Source</b><br>"
+            + source
+        );
+
+
+        // Destination marker
+        L.marker([
+            destinationLat,
+            destinationLon
+        ])
+        .addTo(map)
+        .bindPopup(
+            "<b>🏁 Destination</b><br>"
+            + destination
+        );
+
+
+        // Fit map to route
+        map.fitBounds(
+            routeLine.getBounds(),
+            {
+                padding: [30, 30]
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            "Unable to load the route map."
+        );
+
+    }
+
+}
+
+
+loadRoute();
+
+</script>
+
+{% endblock %}

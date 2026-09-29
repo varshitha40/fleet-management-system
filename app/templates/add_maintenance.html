@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block title %}
+Schedule Maintenance | Fleet Management System
+{% endblock %}
+
+{% block page_title %}
+Schedule Maintenance
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <div class="card">
+
+        <div class="form-header">
+
+            <div>
+                <h2>🔧 Schedule Vehicle Maintenance</h2>
+
+                <p>
+                    Add a maintenance schedule for a vehicle.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form
+            action="{{ url_for('main.add_maintenance') }}"
+            method="POST"
+        >
+
+            <!-- VEHICLE -->
+
+            <div class="form-group">
+
+                <label for="vehicle_number">
+                    Vehicle
+                </label>
+
+                <select
+                    id="vehicle_number"
+                    name="vehicle_number"
+                    required
+                >
+
+                    <option value="">
+                        Select Vehicle
+                    </option>
+
+                    {% for vehicle in vehicles %}
+
+                    <option value="{{ vehicle.vehicle_number }}">
+
+                        {{ vehicle.vehicle_number }}
+                        - {{ vehicle.model }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- SERVICE TYPE -->
+
+            <div class="form-group">
+
+                <label for="service_type">
+                    Service Type
+                </label>
+
+                <select
+                    id="service_type"
+                    name="service_type"
+                    required
+                >
+
+                    <option value="">
+                        Select Service Type
+                    </option>
+
+                    <option value="Regular Service">
+                        Regular Service
+                    </option>
+
+                    <option value="Oil Change">
+                        Oil Change
+                    </option>
+
+                    <option value="Brake Inspection">
+                        Brake Inspection
+                    </option>
+
+                    <option value="Engine Service">
+                        Engine Service
+                    </option>
+
+                    <option value="Tyre Replacement">
+                        Tyre Replacement
+                    </option>
+
+                    <option value="Battery Check">
+                        Battery Check
+                    </option>
+
+                    <option value="General Inspection">
+                        General Inspection
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- DATE -->
+
+            <div class="form-group">
+
+                <label for="maintenance_date">
+                    Maintenance Date
+                </label>
+
+                <input
+                    type="date"
+                    id="maintenance_date"
+                    name="maintenance_date"
+                    required
+                >
+
+            </div>
+
+
+            <!-- COST -->
+
+            <div class="form-group">
+
+                <label for="cost">
+                    Estimated Cost (₹)
+                </label>
+
+                <input
+                    type="number"
+                    id="cost"
+                    name="cost"
+                    placeholder="Example: 2500"
+                    min="0"
+                    step="0.01"
+                    value="0"
+                >
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="form-group">
+
+                <label for="status">
+                    Maintenance Status
+                </label>
+
+                <select
+                    id="status"
+                    name="status"
+                    required
+                >
+
+                    <option value="Scheduled">
+                        Scheduled
+                    </option>
+
+                    <option value="In Progress">
+                        In Progress
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                    <option value="Cancelled">
+                        Cancelled
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- NOTES -->
+
+            <div class="form-group">
+
+                <label for="notes">
+                    Notes
+                </label>
+
+                <textarea
+                    id="notes"
+                    name="notes"
+                    rows="4"
+                    placeholder="Enter additional maintenance details..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('main.maintenance') }}"
+                    class="btn btn-secondary"
+                >
+                    ← Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    + Schedule Maintenance
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

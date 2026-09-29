@@ -1,0 +1,442 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+    gap:15px;
+">
+
+    <div>
+        <h1 style="margin-bottom:6px;">
+            📊 Fleet Dashboard
+        </h1>
+
+        <p style="
+            margin:0;
+            color:#64748b;
+            font-size:16px;
+        ">
+            Monitor your fleet, drivers, routes and maintenance
+        </p>
+    </div>
+
+    <div style="
+        background:#eef2ff;
+        padding:12px 20px;
+        border-radius:25px;
+        color:#4f46e5;
+        font-weight:600;
+    ">
+        🚚 Fleet Management System
+    </div>
+
+</div>
+
+
+<!-- MAIN STAT CARDS -->
+
+<div style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:20px;
+    margin-bottom:25px;
+">
+
+
+    <!-- Vehicles -->
+
+    <div style="
+        background:white;
+        border-radius:18px;
+        padding:24px;
+        box-shadow:0 5px 20px rgba(0,0,0,0.06);
+        border-left:5px solid #4f46e5;
+    ">
+
+        <div style="
+            font-size:32px;
+            margin-bottom:10px;
+        ">
+            🚗
+        </div>
+
+        <div style="
+            color:#64748b;
+            font-size:15px;
+        ">
+            Total Vehicles
+        </div>
+
+        <div style="
+            font-size:32px;
+            font-weight:700;
+            margin-top:5px;
+        ">
+            {{ vehicle_count }}
+        </div>
+
+        <div style="
+            color:#16a34a;
+            font-size:14px;
+            margin-top:8px;
+        ">
+            ✓ {{ available_vehicles }} available
+        </div>
+
+    </div>
+
+
+    <!-- Drivers -->
+
+    <div style="
+        background:white;
+        border-radius:18px;
+        padding:24px;
+        box-shadow:0 5px 20px rgba(0,0,0,0.06);
+        border-left:5px solid #0891b2;
+    ">
+
+        <div style="
+            font-size:32px;
+            margin-bottom:10px;
+        ">
+            👨‍✈️
+        </div>
+
+        <div style="
+            color:#64748b;
+            font-size:15px;
+        ">
+            Total Drivers
+        </div>
+
+        <div style="
+            font-size:32px;
+            font-weight:700;
+            margin-top:5px;
+        ">
+            {{ driver_count }}
+        </div>
+
+        <div style="
+            color:#64748b;
+            font-size:14px;
+            margin-top:8px;
+        ">
+            Registered drivers
+        </div>
+
+    </div>
+
+
+    <!-- Maintenance -->
+
+    <div style="
+        background:white;
+        border-radius:18px;
+        padding:24px;
+        box-shadow:0 5px 20px rgba(0,0,0,0.06);
+        border-left:5px solid #f59e0b;
+    ">
+
+        <div style="
+            font-size:32px;
+            margin-bottom:10px;
+        ">
+            🔧
+        </div>
+
+        <div style="
+            color:#64748b;
+            font-size:15px;
+        ">
+            Maintenance
+        </div>
+
+        <div style="
+            font-size:32px;
+            font-weight:700;
+            margin-top:5px;
+        ">
+            {{ maintenance_count }}
+        </div>
+
+        <div style="
+            color:#f59e0b;
+            font-size:14px;
+            margin-top:8px;
+        ">
+            🗓️ {{ upcoming_maintenance }} scheduled
+        </div>
+
+    </div>
+
+
+    <!-- Routes -->
+
+    <div style="
+        background:white;
+        border-radius:18px;
+        padding:24px;
+        box-shadow:0 5px 20px rgba(0,0,0,0.06);
+        border-left:5px solid #16a34a;
+    ">
+
+        <div style="
+            font-size:32px;
+            margin-bottom:10px;
+        ">
+            🗺️
+        </div>
+
+        <div style="
+            color:#64748b;
+            font-size:15px;
+        ">
+            Total Routes
+        </div>
+
+        <div style="
+            font-size:32px;
+            font-weight:700;
+            margin-top:5px;
+        ">
+            {{ route_count }}
+        </div>
+
+        <div style="
+            color:#16a34a;
+            font-size:14px;
+            margin-top:8px;
+        ">
+            🛣️ {{ active_routes }} active
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- QUICK ACTIONS -->
+
+<div style="
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.06);
+">
+
+    <h2 style="margin-top:0;">
+        ⚡ Quick Actions
+    </h2>
+
+    <p style="
+        color:#64748b;
+        margin-bottom:20px;
+    ">
+        Quickly access the main fleet management functions.
+    </p>
+
+
+    <div style="
+        display:flex;
+        gap:12px;
+        flex-wrap:wrap;
+    ">
+
+        <a href="{{ url_for('main.add_vehicle') }}"
+           style="
+           text-decoration:none;
+           background:#4f46e5;
+           color:white;
+           padding:12px 20px;
+           border-radius:10px;
+           font-weight:600;
+           ">
+            🚗 Add Vehicle
+        </a>
+
+
+        <a href="{{ url_for('main.add_driver') }}"
+           style="
+           text-decoration:none;
+           background:#0891b2;
+           color:white;
+           padding:12px 20px;
+           border-radius:10px;
+           font-weight:600;
+           ">
+            👨‍✈️ Add Driver
+        </a>
+
+
+        <a href="{{ url_for('main.add_maintenance') }}"
+           style="
+           text-decoration:none;
+           background:#f59e0b;
+           color:white;
+           padding:12px 20px;
+           border-radius:10px;
+           font-weight:600;
+           ">
+            🔧 Schedule Maintenance
+        </a>
+
+
+        <a href="{{ url_for('main.add_route') }}"
+           style="
+           text-decoration:none;
+           background:#16a34a;
+           color:white;
+           padding:12px 20px;
+           border-radius:10px;
+           font-weight:600;
+           ">
+            🗺️ Create Route
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- RECENT VEHICLES -->
+
+<div style="
+    background:white;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.06);
+">
+
+    <div style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:20px;
+    ">
+
+        <div>
+            <h2 style="margin:0;">
+                🚘 Recent Vehicles
+            </h2>
+
+            <p style="
+                color:#64748b;
+                margin:6px 0 0;
+            ">
+                Recently added vehicles in your fleet
+            </p>
+        </div>
+
+
+        <a href="{{ url_for('main.vehicles') }}"
+           style="
+           text-decoration:none;
+           color:#4f46e5;
+           font-weight:600;
+           ">
+            View All →
+        </a>
+
+    </div>
+
+
+    {% if recent_vehicles %}
+
+    <div style="
+        display:grid;
+        grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+        gap:15px;
+    ">
+
+        {% for vehicle in recent_vehicles %}
+
+        <div style="
+            border:1px solid #e5e7eb;
+            border-radius:14px;
+            padding:18px;
+            background:#f8fafc;
+        ">
+
+            <div style="
+                font-size:25px;
+                margin-bottom:8px;
+            ">
+                🚗
+            </div>
+
+            <div style="
+                font-size:18px;
+                font-weight:700;
+            ">
+                {{ vehicle.vehicle_number }}
+            </div>
+
+            <div style="
+                color:#64748b;
+                margin-top:5px;
+            ">
+                {{ vehicle.model }}
+            </div>
+
+            <div style="
+                margin-top:12px;
+                display:inline-block;
+                background:#dcfce7;
+                color:#15803d;
+                padding:5px 10px;
+                border-radius:20px;
+                font-size:13px;
+                font-weight:600;
+            ">
+                {{ vehicle.status }}
+            </div>
+
+            <div style="
+                margin-top:12px;
+                color:#64748b;
+                font-size:14px;
+            ">
+                📍 {{ vehicle.current_location }}
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <div style="
+        text-align:center;
+        padding:40px;
+        color:#64748b;
+    ">
+
+        🚗 No vehicles added yet.
+
+        <br><br>
+
+        <a href="{{ url_for('main.add_vehicle') }}"
+           style="
+           color:#4f46e5;
+           font-weight:600;
+           ">
+            Add your first vehicle →
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

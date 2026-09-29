@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}
+Vehicle Tracking | Fleet Management System
+{% endblock %}
+
+{% block page_title %}
+Vehicle Tracking
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h2>📍 Vehicle Tracking</h2>
+
+        <p style="color:#64748b; margin-top:5px;">
+            View and update the current location of fleet vehicles
+        </p>
+    </div>
+
+</div>
+
+
+<!-- TRACKING INFORMATION -->
+
+<div class="card" style="margin-bottom:20px;">
+
+    <h3 class="section-title">
+        🛰️ Live Vehicle Location
+    </h3>
+
+    <p style="color:#64748b; line-height:1.7;">
+
+        Use the location field below to update the current
+        location of each vehicle. The latest location is stored
+        in the fleet database.
+
+    </p>
+
+</div>
+
+
+<!-- VEHICLE TRACKING CARDS -->
+
+{% if vehicles %}
+
+<div class="cards">
+
+    {% for vehicle in vehicles %}
+
+    <div class="card">
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:15px;
+        ">
+
+            <div>
+
+                <h3 style="margin-bottom:5px;">
+                    🚗 {{ vehicle.vehicle_number }}
+                </h3>
+
+                <p style="color:#64748b;">
+                    {{ vehicle.model }}
+                </p>
+
+            </div>
+
+
+            <span class="status
+                {{ vehicle.status|lower|replace(' ', '-') }}">
+
+                {{ vehicle.status }}
+
+            </span>
+
+        </div>
+
+
+        <!-- CURRENT LOCATION -->
+
+        <div style="
+            background:#f8fafc;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:15px;
+        ">
+
+            <p style="
+                color:#64748b;
+                font-size:13px;
+                margin-bottom:5px;
+            ">
+                Current Location
+            </p>
+
+            <strong style="font-size:16px;">
+                📍 {{ vehicle.current_location }}
+            </strong>
+
+        </div>
+
+
+        <!-- LOCATION UPDATE FORM -->
+
+        <form
+            action="{{ url_for('main.update_location', vehicle_id=vehicle.id) }}"
+            method="POST"
+        >
+
+            <div class="form-group">
+
+                <label for="location_{{ vehicle.id }}">
+                    Update Location
+                </label>
+
+                <input
+                    type="text"
+                    id="location_{{ vehicle.id }}"
+                    name="current_location"
+                    placeholder="Example: Bengaluru"
+                    value="{{ vehicle.current_location }}"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+                style="width:100%;"
+            >
+                📍 Update Location
+            </button>
+
+        </form>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="card">
+
+    <div class="empty">
+
+        <div style="font-size:60px;">
+            📍
+        </div>
+
+        <h3 style="margin:15px 0;">
+            No Vehicles Available
+        </h3>
+
+        <p style="margin-bottom:20px;">
+            Add a vehicle first to start tracking it.
+        </p>
+
+        <a
+            href="{{ url_for('main.add_vehicle') }}"
+            class="btn btn-primary"
+        >
+            + Add Vehicle
+        </a>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

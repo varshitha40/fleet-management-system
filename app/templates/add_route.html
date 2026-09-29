@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create Route | Fleet Management System
+{% endblock %}
+
+{% block page_title %}
+Create Route
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <div class="card">
+
+        <div class="form-header">
+
+            <div>
+                <h2>🗺️ Create New Route</h2>
+
+                <p>
+                    Enter the route and trip details below.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form
+            action="{{ url_for('main.add_route') }}"
+            method="POST"
+        >
+
+            <!-- VEHICLE -->
+
+            <div class="form-group">
+
+                <label for="vehicle_number">
+                    Vehicle
+                </label>
+
+                <select
+                    id="vehicle_number"
+                    name="vehicle_number"
+                    required
+                >
+
+                    <option value="">
+                        Select Vehicle
+                    </option>
+
+                    {% for vehicle in vehicles %}
+
+                    <option value="{{ vehicle.vehicle_number }}">
+
+                        {{ vehicle.vehicle_number }}
+                        - {{ vehicle.model }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- DRIVER -->
+
+            <div class="form-group">
+
+                <label for="driver_name">
+                    Driver
+                </label>
+
+                <select
+                    id="driver_name"
+                    name="driver_name"
+                    required
+                >
+
+                    <option value="">
+                        Select Driver
+                    </option>
+
+                    {% for driver in drivers %}
+
+                    <option value="{{ driver.name }}">
+
+                        {{ driver.name }}
+
+                        {% if driver.assigned_vehicle != "Not Assigned" %}
+                            - {{ driver.assigned_vehicle }}
+                        {% endif %}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- SOURCE -->
+
+            <div class="form-group">
+
+                <label for="source">
+                    Starting Location
+                </label>
+
+                <input
+                    type="text"
+                    id="source"
+                    name="source"
+                    placeholder="Example: Bengaluru"
+                    required
+                >
+
+            </div>
+
+
+            <!-- DESTINATION -->
+
+            <div class="form-group">
+
+                <label for="destination">
+                    Destination
+                </label>
+
+                <input
+                    type="text"
+                    id="destination"
+                    name="destination"
+                    placeholder="Example: Mysuru"
+                    required
+                >
+
+            </div>
+
+
+            <!-- DISTANCE -->
+
+            <div class="form-group">
+
+                <label for="distance">
+                    Distance (km)
+                </label>
+
+               <div class="form-group">
+    <label>Route Calculation</label>
+    <div style="
+        padding: 15px;
+        background: #f3f4f6;
+        border-radius: 10px;
+        color: #555;
+    ">
+        🛣️ Distance and ⏱️ Estimated Time will be
+        calculated automatically after you enter the source
+        and destination.
+    </div>
+</div>
+
+                <small style="color:#64748b;">
+                    Enter the estimated route distance.
+                </small>
+
+            </div>
+
+
+            <!-- ESTIMATED TIME -->
+
+            <div class="form-group">
+
+                <label for="estimated_time">
+                    Estimated Travel Time
+                </label>
+
+                
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="form-group">
+
+                <label for="status">
+                    Route Status
+                </label>
+
+                <select
+                    id="status"
+                    name="status"
+                    required
+                >
+
+                    <option value="Planned">
+                        Planned
+                    </option>
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Completed">
+                        Completed
+                    </option>
+
+                    <option value="Cancelled">
+                        Cancelled
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('main.routes') }}"
+                    class="btn btn-secondary"
+                >
+                    ← Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    + Create Route
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

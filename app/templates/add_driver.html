@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Driver | Fleet Management System
+{% endblock %}
+
+{% block page_title %}
+Add Driver
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <div class="card">
+
+        <div class="form-header">
+
+            <div>
+                <h2>👨‍✈️ Add New Driver</h2>
+
+                <p>
+                    Enter the driver details below.
+                </p>
+            </div>
+
+        </div>
+
+
+        <form
+            action="{{ url_for('main.add_driver') }}"
+            method="POST"
+        >
+
+            <!-- DRIVER NAME -->
+
+            <div class="form-group">
+
+                <label for="name">
+                    Driver Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Example: Rahul Kumar"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+                <label for="phone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Example: 9876543210"
+                    required
+                >
+
+            </div>
+
+
+            <!-- LICENSE -->
+
+            <div class="form-group">
+
+                <label for="license_number">
+                    License Number
+                </label>
+
+                <input
+                    type="text"
+                    id="license_number"
+                    name="license_number"
+                    placeholder="Example: KA0120240012345"
+                    required
+                >
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="form-group">
+
+                <label for="status">
+                    Driver Status
+                </label>
+
+                <select
+                    id="status"
+                    name="status"
+                    required
+                >
+
+                    <option value="Available">
+                        Available
+                    </option>
+
+                    <option value="On Duty">
+                        On Duty
+                    </option>
+
+                    <option value="Off Duty">
+                        Off Duty
+                    </option>
+
+                    <option value="Inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- ASSIGNED VEHICLE -->
+
+            <div class="form-group">
+
+                <label for="assigned_vehicle">
+                    Assigned Vehicle
+                </label>
+
+                <select
+                    id="assigned_vehicle"
+                    name="assigned_vehicle"
+                >
+
+                    <option value="Not Assigned">
+                        Not Assigned
+                    </option>
+
+                    {% for vehicle in vehicles %}
+
+                    <option value="{{ vehicle.vehicle_number }}">
+                        {{ vehicle.vehicle_number }}
+                        - {{ vehicle.model }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('main.drivers') }}"
+                    class="btn btn-secondary"
+                >
+                    ← Cancel
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    + Add Driver
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
